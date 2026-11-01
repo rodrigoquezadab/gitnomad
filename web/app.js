@@ -20,6 +20,7 @@
       'nav.skip': 'Saltar a la instalación',
       'nav.how': 'Cómo funciona',
       'nav.start': 'Empezar',
+      'nav.cmds': 'Comandos',
       'nav.faq': 'Preguntas',
       'hero.title': 'Todos tus repos de GitHub, en cada equipo.',
       'hero.lead': 'gitnomad descarga tus repositorios públicos y privados en la carpeta que elijas, con un solo comando. Usa tu sesión de GitHub CLI, así que no tienes que copiar tokens, y nunca pisa tu trabajo local.',
@@ -37,8 +38,10 @@
       'wiz.os': 'Tu sistema',
       'wiz.distro': 'Distribución',
       'wiz.dir': 'Carpeta donde se clonarán los repos',
-      'wiz.dir.hint': 'Puedes usar <code>~</code> para tu carpeta personal. Se crea si no existe.',
-      'wiz.reset': 'Usar la sugerida',
+      'wiz.dir.hint': 'Pega la ruta completa: los comandos de abajo se arman con ella. Se crea si no existe.',
+      'wiz.dir.how.windows': 'Para copiarla: abre la carpeta en el Explorador de archivos, haz clic en la barra de direcciones y copia (Ctrl+C). También sirve clic derecho → «Copiar como ruta de acceso».',
+      'wiz.dir.how.macos': 'Para copiarla: en Finder selecciona la carpeta y pulsa Opción+Cmd+C (o clic derecho con Opción → «Copiar como nombre de ruta»). Puedes usar <code>~</code> para tu carpeta personal.',
+      'wiz.dir.how.linux': 'Para copiarla: en tu explorador de archivos pulsa Ctrl+L y copia la ruta, o escribe <code>pwd</code> en una terminal dentro de la carpeta. Puedes usar <code>~</code> para tu carpeta personal.',
       'wiz.options': 'Opciones',
       'wiz.forks': 'Incluir forks',
       'wiz.archived': 'Incluir repos archivados',
@@ -88,6 +91,21 @@
       'safety.3.d': 'Nunca pide claves por consola. Si un repo falla, lo informa y sigue con el resto.',
       'safety.4.t': 'Instalador verificado.',
       'safety.4.d': 'Cada descarga se comprueba con su suma SHA-256 antes de instalarse.',
+      'cmds.title': 'Todos los comandos',
+      'cmds.lead': 'Referencia rápida. Las opciones de <code>clone</code> solo valen para esa ejecución; para dejarlas fijas usa <code>gitnomad config set</code>.',
+      'cmds.keys': 'Claves de <code>config set</code>: <code>base_dir</code>, <code>parallel</code>, <code>include_forks</code>, <code>include_archived</code> y <code>exclude</code>.',
+      cmds: [
+        ['gitnomad doctor', 'Revisa que git, gh y tu sesión de GitHub estén listos.'],
+        ['gitnomad doctor --fix', 'Además arregla lo que pueda, como configurar git para usar las credenciales de gh.'],
+        ['gitnomad config show', 'Muestra tu configuración y dónde está el archivo.'],
+        ['gitnomad config init --dir RUTA', 'Crea la configuración de este equipo. Con <code>--pick</code> eliges la carpeta en una ventana; <code>--force</code> reemplaza una existente.'],
+        ['gitnomad config set base_dir --pick', 'Abre el selector de carpetas de tu sistema y guarda la que elijas.'],
+        ['gitnomad config set <clave> <valor>', 'Cambia una opción, por ejemplo <code>parallel 8</code> o <code>exclude "test-*"</code>.'],
+        ['gitnomad list', 'Lista tus repos y si están descargados, faltan, en conflicto u omitidos. Con <code>--json</code> para scripts.'],
+        ['gitnomad clone --dry-run', 'Muestra qué se clonaría y dónde, sin descargar nada.'],
+        ['gitnomad clone', 'Clona los repos que faltan. Opciones: <code>--parallel N</code> y <code>--dir RUTA</code>.'],
+        ['gitnomad version', 'Muestra la versión instalada.']
+      ],
       'faq.title': 'Preguntas frecuentes',
       'footer.by': 'hecho por',
       'footer.code': 'Código en GitHub',
@@ -96,6 +114,8 @@
         ['¿Actualiza los repos que ya tengo?', 'Por ahora clona los que faltan y no toca los existentes. La sincronización (traer cambios y avisar de commits sin subir) llega en la próxima versión.'],
         ['¿Funciona con varias cuentas de GitHub?', 'Usa la cuenta activa en GitHub CLI. Puedes cambiarla con <code>gh auth switch</code> y apuntar a otra carpeta con <code>gitnomad config set base_dir</code>.'],
         ['¿Dónde se guarda la configuración?', '<p>Windows: <code>%APPDATA%\\gitnomad\\config.json</code></p><p>macOS: <code>~/Library/Application Support/gitnomad/config.json</code></p><p>Linux: <code>~/.config/gitnomad/config.json</code></p>'],
+        ['¿Puedo elegir la carpeta en una ventana en vez de escribirla?', 'Sí: <code>gitnomad config set base_dir --pick</code> abre el selector de carpetas de tu sistema. En Windows y macOS funciona sin instalar nada; en Linux necesita <code>zenity</code> o <code>kdialog</code>. Si cierras la ventana sin elegir, no cambia nada. Disponible desde v0.2.0 (mira tu versión con <code>gitnomad version</code>).'],
+        ['¿Puedo clonar en una carpeta que ya tiene otros proyectos?', 'Sí. Cada repo va a su propia subcarpeta, los que ya estén ahí se reconocen como descargados y nada existente se modifica. Si una carpeta tiene el nombre de un repo pero es otra cosa, queda como conflicto y no se toca. Usa <code>gitnomad clone --dry-run</code> para ver antes qué pasaría.'],
         ['¿Cómo excluyo algunos repos?', 'Con patrones separados por coma: <code>gitnomad config set exclude "test-*,viejo"</code>.'],
         ['¿Cómo actualizo gitnomad?', 'Vuelve a ejecutar el comando de instalación: reemplaza el ejecutable por la última versión.'],
         ['¿Cómo lo desinstalo?', 'Borra el ejecutable (Windows: <code>%LOCALAPPDATA%\\Programs\\gitnomad</code>; macOS/Linux: <code>~/.local/bin/gitnomad</code>) y la carpeta de configuración. Tus repos clonados no se tocan.']
@@ -106,6 +126,7 @@
       'nav.skip': 'Skip to installation',
       'nav.how': 'How it works',
       'nav.start': 'Get started',
+      'nav.cmds': 'Commands',
       'nav.faq': 'FAQ',
       'hero.title': 'All your GitHub repos, on every machine.',
       'hero.lead': 'gitnomad downloads your public and private repositories into the folder you choose, with a single command. It uses your GitHub CLI session, so there are no tokens to copy, and it never overwrites your local work.',
@@ -123,8 +144,10 @@
       'wiz.os': 'Your system',
       'wiz.distro': 'Distribution',
       'wiz.dir': 'Folder to clone your repos into',
-      'wiz.dir.hint': 'You can use <code>~</code> for your home folder. It is created if it does not exist.',
-      'wiz.reset': 'Use suggested',
+      'wiz.dir.hint': 'Paste the full path: the commands below are built with it. It is created if it does not exist.',
+      'wiz.dir.how.windows': 'To copy it: open the folder in File Explorer, click the address bar and copy (Ctrl+C). Right-click → “Copy as path” works too.',
+      'wiz.dir.how.macos': 'To copy it: select the folder in Finder and press Option+Cmd+C (or Option-right-click → “Copy as Pathname”). You can use <code>~</code> for your home folder.',
+      'wiz.dir.how.linux': 'To copy it: press Ctrl+L in your file manager and copy the path, or run <code>pwd</code> in a terminal inside the folder. You can use <code>~</code> for your home folder.',
       'wiz.options': 'Options',
       'wiz.forks': 'Include forks',
       'wiz.archived': 'Include archived repos',
@@ -174,6 +197,21 @@
       'safety.3.d': 'It never prompts for passwords in the console. If a repo fails, it reports it and moves on.',
       'safety.4.t': 'Verified installer.',
       'safety.4.d': 'Every download is checked against its SHA-256 checksum before it is installed.',
+      'cmds.title': 'All commands',
+      'cmds.lead': 'Quick reference. <code>clone</code> options apply to that run only; to keep them, use <code>gitnomad config set</code>.',
+      'cmds.keys': '<code>config set</code> keys: <code>base_dir</code>, <code>parallel</code>, <code>include_forks</code>, <code>include_archived</code> and <code>exclude</code>.',
+      cmds: [
+        ['gitnomad doctor', 'Checks that git, gh and your GitHub session are ready.'],
+        ['gitnomad doctor --fix', 'Also fixes what it can, such as setting git to use the gh credentials.'],
+        ['gitnomad config show', 'Shows your configuration and where the file is.'],
+        ['gitnomad config init --dir PATH', 'Creates this machine’s configuration. With <code>--pick</code> you choose the folder in a window; <code>--force</code> replaces an existing one.'],
+        ['gitnomad config set base_dir --pick', 'Opens your system’s folder picker and saves the folder you choose.'],
+        ['gitnomad config set <key> <value>', 'Changes an option, for example <code>parallel 8</code> or <code>exclude "test-*"</code>.'],
+        ['gitnomad list', 'Lists your repos and whether each is downloaded, missing, in conflict or skipped. Add <code>--json</code> for scripts.'],
+        ['gitnomad clone --dry-run', 'Shows what would be cloned and where, without downloading anything.'],
+        ['gitnomad clone', 'Clones the missing repos. Options: <code>--parallel N</code> and <code>--dir PATH</code>.'],
+        ['gitnomad version', 'Shows the installed version.']
+      ],
       'faq.title': 'Frequently asked questions',
       'footer.by': 'made by',
       'footer.code': 'Code on GitHub',
@@ -183,6 +221,8 @@
         ['Is the command-line output in English?', 'Not yet: gitnomad currently prints its messages in Spanish. English output is planned. The commands and options are the same.'],
         ['Does it work with several GitHub accounts?', 'It uses the active GitHub CLI account. Switch with <code>gh auth switch</code> and point to another folder with <code>gitnomad config set base_dir</code>.'],
         ['Where is the configuration stored?', '<p>Windows: <code>%APPDATA%\\gitnomad\\config.json</code></p><p>macOS: <code>~/Library/Application Support/gitnomad/config.json</code></p><p>Linux: <code>~/.config/gitnomad/config.json</code></p>'],
+        ['Can I choose the folder in a window instead of typing it?', 'Yes: <code>gitnomad config set base_dir --pick</code> opens your system’s folder picker. On Windows and macOS it works out of the box; on Linux it needs <code>zenity</code> or <code>kdialog</code>. If you close the window without choosing, nothing changes. Available from v0.2.0 (check yours with <code>gitnomad version</code>).'],
+        ['Can I clone into a folder that already has other projects?', 'Yes. Each repo goes into its own subfolder, repos already there are recognized as downloaded and nothing existing is modified. If a folder has a repo’s name but is something else, it is marked as a conflict and left alone. Run <code>gitnomad clone --dry-run</code> first to see what would happen.'],
         ['How do I exclude some repos?', 'With comma-separated patterns: <code>gitnomad config set exclude "test-*,old"</code>.'],
         ['How do I update gitnomad?', 'Run the install command again: it replaces the executable with the latest version.'],
         ['How do I uninstall it?', 'Delete the executable (Windows: <code>%LOCALAPPDATA%\\Programs\\gitnomad</code>; macOS/Linux: <code>~/.local/bin/gitnomad</code>) and the configuration folder. Your cloned repos are not touched.']
@@ -341,6 +381,12 @@
     }).join('');
   }
 
+  function renderCommands() {
+    document.getElementById('cmd-list').innerHTML = T[state.lang].cmds.map(function (c) {
+      return '<li><code>' + esc(c[0]) + '</code><span>' + c[1] + '</span></li>';
+    }).join('');
+  }
+
   function applyLang() {
     document.documentElement.lang = state.lang;
     document.querySelectorAll('[data-i18n]').forEach(function (el) {
@@ -351,6 +397,7 @@
     document.querySelectorAll('[data-lang]').forEach(function (b) {
       b.setAttribute('aria-pressed', String(b.getAttribute('data-lang') === state.lang));
     });
+    renderCommands();
     renderFAQ();
     renderSteps();
     validateDir();
@@ -361,6 +408,9 @@
     document.getElementById('distro-field').hidden = state.os !== 'linux';
     document.getElementById('distro').value = state.distro;
     document.getElementById('dir').value = state.dir;
+    var how = document.getElementById('dir-how');
+    how.setAttribute('data-i18n', 'wiz.dir.how.' + state.os);
+    how.innerHTML = t(how.getAttribute('data-i18n'));
     document.getElementById('dir').placeholder = DEFAULT_DIR[state.os];
     document.getElementById('forks').checked = state.forks;
     document.getElementById('archived').checked = state.archived;
@@ -425,10 +475,10 @@
     state.distro = e.target.value; save('distro', state.distro); renderSteps();
   });
   document.getElementById('dir').addEventListener('input', function (e) {
-    state.dir = e.target.value; save('dir', state.dir); renderSteps(); validateDir();
-  });
-  document.getElementById('dir-reset').addEventListener('click', function () {
-    state.dir = DEFAULT_DIR[state.os]; save('dir', state.dir); syncForm(); renderSteps(); validateDir();
+    // «Copiar como ruta de acceso» de Windows pega la ruta entre comillas.
+    var v = e.target.value.trim().replace(/^(["'])(.*)\1$/, '$2');
+    if (v !== e.target.value.trim()) e.target.value = v;
+    state.dir = v; save('dir', state.dir); renderSteps(); validateDir();
   });
   document.getElementById('forks').addEventListener('change', function (e) {
     state.forks = e.target.checked; save('forks', state.forks ? '1' : '0'); renderSteps();

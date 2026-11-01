@@ -21,6 +21,7 @@
       <nav class="nav" aria-label="principal">
         <a href="#how" data-i18n="nav.how">Cómo funciona</a>
         <a href="#start" data-i18n="nav.start">Empezar</a>
+        <a href="#commands" data-i18n="nav.cmds">Comandos</a>
         <a href="#faq" data-i18n="nav.faq">Preguntas</a>
         <a class="js-repo-link" href="https://github.com/rodrigoquezadab/gitnomad">GitHub</a>
       </nav>
@@ -111,11 +112,9 @@ Listo en 3s: 3 clonados, 0 con error.</pre>
 
           <div class="field field-wide">
             <label for="dir" data-i18n="wiz.dir">Carpeta donde se clonarán los repos</label>
-            <div class="dir-row">
-              <input id="dir" type="text" spellcheck="false" inputmode="text">
-              <button type="button" class="btn btn-small btn-ghost" id="dir-reset" data-i18n="wiz.reset">Usar la sugerida</button>
-            </div>
+            <input id="dir" type="text" spellcheck="false" inputmode="text">
             <p class="hint" id="dir-hint" data-i18n="wiz.dir.hint"></p>
+            <p class="hint" id="dir-how" data-i18n="wiz.dir.how.windows"></p>
             <p class="warn" id="dir-warn" role="status" hidden></p>
           </div>
 
@@ -143,8 +142,18 @@ Listo en 3s: 3 clonados, 0 con error.</pre>
       </div>
     </section>
 
+    <!-- Comandos -->
+    <section id="commands" class="section section-alt">
+      <div class="wrap">
+        <h2 data-i18n="cmds.title">Todos los comandos</h2>
+        <p class="section-lead" data-i18n="cmds.lead"></p>
+        <ul class="cmd-list" id="cmd-list"></ul>
+        <p class="hint" data-i18n="cmds.keys"></p>
+      </div>
+    </section>
+
     <!-- FAQ -->
-    <section id="faq" class="section section-alt">
+    <section id="faq" class="section">
       <div class="wrap">
         <h2 data-i18n="faq.title">Preguntas frecuentes</h2>
         <div class="faq" id="faq-list"></div>
