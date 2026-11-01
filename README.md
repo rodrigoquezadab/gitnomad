@@ -47,9 +47,49 @@ gitnomad clone                             # clonar lo que falta
 
 En Windows la carpeta puede ser, por ejemplo, `--dir C:\Dev\github`.
 
-Para elegir la carpeta en el selector de carpetas del sistema en vez de
-escribirla, usa `--pick`: `gitnomad config init --pick` o
-`gitnomad config set base_dir --pick`. En Linux necesita `zenity` o `kdialog`.
+### Comandos
+
+| comando | qué hace |
+|---|---|
+| `gitnomad doctor` | revisa que git, gh y la sesión de GitHub estén listos |
+| `gitnomad doctor --fix` | además arregla lo que pueda (por ejemplo, configurar git para usar las credenciales de gh) |
+| `gitnomad config show` | muestra la configuración y dónde está el archivo |
+| `gitnomad config init [--dir RUTA] [--pick] [--force]` | crea la configuración de este equipo; `--force` la reemplaza si ya existe |
+| `gitnomad config set <clave> <valor>` | cambia una opción (ver [Configuración](#configuración)) |
+| `gitnomad config set base_dir --pick` | elige la carpeta de repos en una ventana |
+| `gitnomad list [--json]` | lista tus repos: descargado, falta, conflicto u omitido |
+| `gitnomad clone` | clona los repos que faltan |
+| `gitnomad clone --dry-run` | muestra qué clonaría, sin hacer nada |
+| `gitnomad clone --parallel N` | clona N repos a la vez (solo esta vez) |
+| `gitnomad clone --dir RUTA` | clona en otra carpeta (solo esta vez) |
+| `gitnomad version` | muestra la versión |
+
+### Elegir la carpeta en una ventana
+
+En vez de escribir la ruta, `--pick` abre el selector de carpetas de tu sistema
+y guarda la que elijas:
+
+```sh
+gitnomad config set base_dir --pick    # cambiar la carpeta
+gitnomad config init --pick            # o al crear la configuración
+```
+
+- **Windows:** usa PowerShell (viene con el sistema).
+- **macOS:** usa `osascript` (viene con el sistema).
+- **Linux:** necesita `zenity` o `kdialog` y un escritorio gráfico. En un
+  servidor sin escritorio, escribe la ruta: `gitnomad config set base_dir RUTA`.
+
+La ventana abre en la carpeta actual (o en la más cercana que exista). Si la
+cierras sin elegir, no se cambia nada.
+
+En la web, el asistente pide en cambio **pegar la ruta**: así los comandos
+salen listos para ejecutar y ves exactamente dónde se descargarán los repos.
+Si pegas la ruta entre comillas (como la copia Windows con «Copiar como ruta de
+acceso»), el asistente las quita.
+
+> Puedes apuntar a una carpeta que ya tenga otros proyectos (por ejemplo
+> `C:\Users\tú\Desktop\Code`). Cada repo se clona en su propia subcarpeta, los
+> que ya estén ahí se reconocen como descargados y nada existente se modifica.
 
 ### Configuración
 
@@ -75,7 +115,7 @@ El archivo se guarda en la carpeta de configuración del sistema
 
 ## Compilar
 
-Requiere Go 1.22+.
+Requiere Go 1.22+. En Windows: `winget install --id GoLang.Go -e`.
 
 ```sh
 go test ./...
@@ -106,9 +146,46 @@ internal/github/   lista de repos vía gh
 internal/gitops/   ejecutar git, clonar, comparar URLs
 internal/syncer/   motor: filtrar, inspeccionar, clonar en paralelo
 internal/doctor/   chequeos del equipo
+internal/picker/   selector de carpetas nativo (--pick)
 scripts/           instaladores (install.sh, install.ps1) y build.sh
 web/               sitio (GitHub Pages): guía bilingüe con asistente
 .github/workflows/ ci.yml (tests en 3 SO), release.yml, pages.yml
 ```
 
-Para ver el sitio en local: `python3 -m http.server -d web 8000`.
+## Desarrollo local
+
+**Probar el CLI sin instalarlo.** Desde la carpeta del repo:
+
+```sh
+go run ./cmd/gitnomad clone --dry-run
+```
+
+El instalador de una línea (`irm ... | iex` o `curl ... | sh`) siempre baja la
+**última release publicada**, no tu código local. Para probar cambios que aún
+no están en una release, usa `go run` o compila con `go build`.
+
+**Sin tocar tu configuración real.** Apunta a un archivo temporal con
+`GITNOMAD_CONFIG`:
+
+```powershell
+$env:GITNOMAD_CONFIG = "$env:TEMP\gitnomad-prueba.json"   # PowerShell
+```
+
+```sh
+export GITNOMAD_CONFIG=/tmp/gitnomad-prueba.json          # macOS / Linux
+```
+
+**`go` no se reconoce tras instalarlo (Windows).** Las terminales que ya estaban
+abiertas no ven el PATH nuevo. Abre una nueva o, en la actual:
+
+```powershell
+$env:Path = "C:\Program Files\Go\bin;$env:Path"
+```
+
+**Ver el sitio en local** (se recarga al guardar):
+
+```sh
+npx live-server web --port=5500
+```
+
+O, sin recarga automática, `python3 -m http.server -d web 8000`.
