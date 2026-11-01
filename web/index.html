@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>gitsync</title>
+  <meta name="description" content="Descarga todos tus repos de GitHub, públicos y privados, en Windows, macOS o Linux con un solo comando.">
+  <meta name="color-scheme" content="light dark">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%231f9d6b'/%3E%3Cpath d='M10 12a6 6 0 0 1 11-2m1 10a6 6 0 0 1-11 2' fill='none' stroke='white' stroke-width='2.6' stroke-linecap='round'/%3E%3Cpath d='M22 6v4h-4M10 26v-4h4' fill='none' stroke='white' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip" href="#start" data-i18n="nav.skip">Saltar a la instalación</a>
+
+  <header class="topbar">
+    <div class="wrap topbar-inner">
+      <a class="brand" href="#top" aria-label="gitsync">
+        <svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" class="brand-bg"/><path d="M10 12a6 6 0 0 1 11-2m1 10a6 6 0 0 1-11 2" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/><path d="M22 6v4h-4M10 26v-4h4" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>gitsync</span>
+      </a>
+      <nav class="nav" aria-label="principal">
+        <a href="#how" data-i18n="nav.how">Cómo funciona</a>
+        <a href="#start" data-i18n="nav.start">Empezar</a>
+        <a href="#faq" data-i18n="nav.faq">Preguntas</a>
+        <a class="js-repo-link" href="https://github.com/rodrigoquezadab/gitsync">GitHub</a>
+      </nav>
+      <div class="lang" role="group" aria-label="Idioma / Language">
+        <button type="button" data-lang="es" aria-pressed="true">ES</button>
+        <button type="button" data-lang="en" aria-pressed="false">EN</button>
+      </div>
+    </div>
+  </header>
+
+  <main id="top">
+    <!-- Portada -->
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div>
+          <p class="eyebrow">Windows · macOS · Linux</p>
+          <h1 data-i18n="hero.title">Todos tus repos de GitHub, en cada equipo.</h1>
+          <p class="lead" data-i18n="hero.lead">gitsync descarga tus repositorios públicos y privados en la carpeta que elijas, con un solo comando.</p>
+          <div class="cta">
+            <a class="btn btn-primary" href="#start" data-i18n="hero.cta">Empezar ahora</a>
+            <a class="btn btn-ghost js-repo-link" href="https://github.com/rodrigoquezadab/gitsync" data-i18n="hero.repo">Ver código en GitHub</a>
+          </div>
+        </div>
+        <div class="terminal" aria-hidden="true">
+          <div class="terminal-bar"><span></span><span></span><span></span></div>
+<pre><span class="t-p">$</span> gitsync clone
+Obteniendo tus repos de GitHub...
+12 repos en GitHub: 9 ya descargados, 3 por clonar
+Carpeta: ~/dev/github
+
+<span class="t-ok">[1/3] ok</span>     MejorarWindows (2.1s)
+<span class="t-ok">[2/3] ok</span>     portafolio (0.8s)
+<span class="t-ok">[3/3] ok</span>     notas-privadas (0.6s)
+
+Listo en 3s: 3 clonados, 0 con error.</pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- Cómo funciona -->
+    <section id="how" class="section">
+      <div class="wrap">
+        <h2 data-i18n="how.title">Tres pasos, una vez por equipo</h2>
+        <ol class="cards">
+          <li class="card">
+            <span class="card-num">1</span>
+            <h3 data-i18n="how.1.t">Vincula tu cuenta</h3>
+            <p data-i18n="how.1.d"></p>
+          </li>
+          <li class="card">
+            <span class="card-num">2</span>
+            <h3 data-i18n="how.2.t">Elige la carpeta</h3>
+            <p data-i18n="how.2.d"></p>
+          </li>
+          <li class="card">
+            <span class="card-num">3</span>
+            <h3 data-i18n="how.3.t">Clona todo</h3>
+            <p data-i18n="how.3.d"></p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- Asistente -->
+    <section id="start" class="section section-alt">
+      <div class="wrap">
+        <h2 data-i18n="start.title">Instalación guiada</h2>
+        <p class="section-lead" data-i18n="start.lead"></p>
+
+        <form class="wizard" id="wizard" autocomplete="off" onsubmit="return false">
+          <fieldset class="field">
+            <legend data-i18n="wiz.os">Tu sistema</legend>
+            <div class="seg" role="radiogroup">
+              <label><input type="radio" name="os" value="windows"><span>Windows</span></label>
+              <label><input type="radio" name="os" value="macos"><span>macOS</span></label>
+              <label><input type="radio" name="os" value="linux"><span>Linux</span></label>
+            </div>
+          </fieldset>
+
+          <div class="field" id="distro-field" hidden>
+            <label for="distro" data-i18n="wiz.distro">Distribución</label>
+            <select id="distro">
+              <option value="apt">Debian / Ubuntu (apt)</option>
+              <option value="dnf">Fedora / RHEL (dnf)</option>
+              <option value="pacman">Arch / Manjaro (pacman)</option>
+            </select>
+          </div>
+
+          <div class="field field-wide">
+            <label for="dir" data-i18n="wiz.dir">Carpeta donde se clonarán los repos</label>
+            <div class="dir-row">
+              <input id="dir" type="text" spellcheck="false" inputmode="text">
+              <button type="button" class="btn btn-small btn-ghost" id="dir-reset" data-i18n="wiz.reset">Usar la sugerida</button>
+            </div>
+            <p class="hint" id="dir-hint" data-i18n="wiz.dir.hint"></p>
+            <p class="warn" id="dir-warn" role="status" hidden></p>
+          </div>
+
+          <fieldset class="field field-wide checks">
+            <legend class="sr-only" data-i18n="wiz.options">Opciones</legend>
+            <label class="check"><input type="checkbox" id="forks" checked> <span data-i18n="wiz.forks">Incluir forks</span></label>
+            <label class="check"><input type="checkbox" id="archived"> <span data-i18n="wiz.archived">Incluir repos archivados</span></label>
+          </fieldset>
+        </form>
+
+        <ol class="steps" id="steps" aria-live="polite"></ol>
+      </div>
+    </section>
+
+    <!-- Seguridad -->
+    <section id="safety" class="section">
+      <div class="wrap">
+        <h2 data-i18n="safety.title">Hecho para no romper nada</h2>
+        <ul class="safety">
+          <li><strong data-i18n="safety.1.t"></strong><span data-i18n="safety.1.d"></span></li>
+          <li><strong data-i18n="safety.2.t"></strong><span data-i18n="safety.2.d"></span></li>
+          <li><strong data-i18n="safety.3.t"></strong><span data-i18n="safety.3.d"></span></li>
+          <li><strong data-i18n="safety.4.t"></strong><span data-i18n="safety.4.d"></span></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq" class="section section-alt">
+      <div class="wrap">
+        <h2 data-i18n="faq.title">Preguntas frecuentes</h2>
+        <div class="faq" id="faq-list"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap footer-inner">
+      <span>gitsync · <span data-i18n="footer.by">hecho por</span> <a href="https://github.com/rodrigoquezadab">Rod Quez</a></span>
+      <a class="js-repo-link" href="https://github.com/rodrigoquezadab/gitsync" data-i18n="footer.code">Código en GitHub</a>
+    </div>
+  </footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="app.js"></script>
+</body>
+</html>
