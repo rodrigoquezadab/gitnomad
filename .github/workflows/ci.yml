@@ -23,8 +23,8 @@ jobs:
           git config --global user.email "ci@example.com"
       - run: go vet ./...
       - run: go test -race ./...
-      - run: go build -o dist/ ./cmd/gitsync
+      - run: go build -o dist/ ./cmd/gitnomad
       - uses: actions/upload-artifact@v4
         with:
-          name: gitsync-${{ matrix.os }}
+          name: gitnomad-${{ matrix.os }}
           path: dist/

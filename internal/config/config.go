@@ -1,11 +1,11 @@
-// Package config carga y guarda la configuración de gitsync de cada equipo.
+// Package config carga y guarda la configuración de gitnomad de cada equipo.
 //
 // El archivo vive en la carpeta de configuración estándar del sistema:
-//   - Windows: %APPDATA%\gitsync\config.json
-//   - macOS:   ~/Library/Application Support/gitsync/config.json
-//   - Linux:   ~/.config/gitsync/config.json  (o $XDG_CONFIG_HOME)
+//   - Windows: %APPDATA%\gitnomad\config.json
+//   - macOS:   ~/Library/Application Support/gitnomad/config.json
+//   - Linux:   ~/.config/gitnomad/config.json  (o $XDG_CONFIG_HOME)
 //
-// Se puede forzar otra ruta con la variable de entorno GITSYNC_CONFIG.
+// Se puede forzar otra ruta con la variable de entorno GITNOMAD_CONFIG.
 package config
 
 import (
@@ -52,14 +52,14 @@ func Default() Config {
 
 // Path devuelve la ruta del archivo de configuración.
 func Path() (string, error) {
-	if p := os.Getenv("GITSYNC_CONFIG"); p != "" {
+	if p := os.Getenv("GITNOMAD_CONFIG"); p != "" {
 		return p, nil
 	}
 	dir, err := os.UserConfigDir()
 	if err != nil {
 		return "", fmt.Errorf("no se pudo determinar la carpeta de configuración: %w", err)
 	}
-	return filepath.Join(dir, "gitsync", "config.json"), nil
+	return filepath.Join(dir, "gitnomad", "config.json"), nil
 }
 
 // Load lee la configuración. Si el archivo no existe devuelve Default() y

@@ -8,7 +8,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/rodrigoquezadab/gitsync/internal/gitops"
+	"github.com/rodrigoquezadab/gitnomad/internal/gitops"
 )
 
 // Repo es un repositorio de GitHub.

@@ -1,11 +1,11 @@
-/* gitsync — sitio web: idioma, asistente de instalación y botones de copiar. */
+/* gitnomad — sitio web: idioma, asistente de instalación y botones de copiar. */
 (function () {
   'use strict';
 
   // ---- Configuración del proyecto (cambia esto si haces un fork) ----
   var CONFIG = {
-    repo: 'rodrigoquezadab/gitsync',
-    site: 'https://rodrigoquezadab.github.io/gitsync'
+    repo: 'rodrigoquezadab/gitnomad',
+    site: 'https://rodrigoquezadab.github.io/gitnomad'
   };
   var REPO_URL = 'https://github.com/' + CONFIG.repo;
   var RELEASES_URL = REPO_URL + '/releases/latest';
@@ -22,16 +22,16 @@
       'nav.start': 'Empezar',
       'nav.faq': 'Preguntas',
       'hero.title': 'Todos tus repos de GitHub, en cada equipo.',
-      'hero.lead': 'gitsync descarga tus repositorios públicos y privados en la carpeta que elijas, con un solo comando. Usa tu sesión de GitHub CLI, así que no tienes que copiar tokens, y nunca pisa tu trabajo local.',
+      'hero.lead': 'gitnomad descarga tus repositorios públicos y privados en la carpeta que elijas, con un solo comando. Usa tu sesión de GitHub CLI, así que no tienes que copiar tokens, y nunca pisa tu trabajo local.',
       'hero.cta': 'Empezar ahora',
       'hero.repo': 'Ver código en GitHub',
       'how.title': 'Tres pasos, una vez por equipo',
       'how.1.t': 'Vincula tu cuenta',
-      'how.1.d': 'Inicias sesión con GitHub CLI desde el navegador. gitsync usa esa sesión para ver también tus repos privados.',
+      'how.1.d': 'Inicias sesión con GitHub CLI desde el navegador. gitnomad usa esa sesión para ver también tus repos privados.',
       'how.2.t': 'Elige la carpeta',
       'how.2.d': 'Cada equipo guarda los repos donde tú quieras: <code>C:\\Dev\\github</code> en Windows, <code>~/dev/github</code> en Mac o Linux.',
       'how.3.t': 'Clona todo',
-      'how.3.d': 'gitsync compara tu cuenta con la carpeta y clona solo lo que falta. Puedes repetirlo cuando quieras.',
+      'how.3.d': 'gitnomad compara tu cuenta con la carpeta y clona solo lo que falta. Puedes repetirlo cuando quieras.',
       'start.title': 'Instalación guiada',
       'start.lead': 'Elige tu sistema y la carpeta. Los comandos se arman solos: cópialos en orden.',
       'wiz.os': 'Tu sistema',
@@ -59,11 +59,11 @@
       's2.q4': 'How would you like to authenticate GitHub CLI?',
       's2.browser': 'Copia el código de 8 caracteres que aparece, presiona Enter y pégalo en la página de GitHub que se abre. Luego autoriza el acceso.',
       's2.verify': 'Comprueba que quedó vinculada (debe mostrar tu usuario):',
-      's2.note': 'GitHub CLI guarda la sesión en tu equipo. gitsync no lee ni guarda tu token: le pide a <code>gh</code> que se autentique cuando hace falta.',
-      's3.t': 'Instala gitsync',
+      's2.note': 'GitHub CLI guarda la sesión en tu equipo. gitnomad no lee ni guarda tu token: le pide a <code>gh</code> que se autentique cuando hace falta.',
+      's3.t': 'Instala gitnomad',
       's3.win': 'En PowerShell:',
       's3.unix': 'En la terminal:',
-      's3.unix.after': 'Si después dice que no encuentra <code>gitsync</code>, abre una terminal nueva.',
+      's3.unix.after': 'Si después dice que no encuentra <code>gitnomad</code>, abre una terminal nueva.',
       's3.manual': '¿Prefieres descargarlo a mano? Está en <a href="{url}">Releases</a>.',
       's4.t': 'Define la carpeta de tus repos',
       's4.d': 'Guarda la carpeta en la configuración de este equipo:',
@@ -74,7 +74,7 @@
       's5.list': 'Mira qué repos tienes y cuáles faltan:',
       's5.dry': 'Simula sin descargar nada:',
       's5.clone': 'Clona lo que falta:',
-      's5.after': 'En otro equipo repite estos pasos. Cuando crees repos nuevos, vuelve a correr <code>gitsync clone</code>.',
+      's5.after': 'En otro equipo repite estos pasos. Cuando crees repos nuevos, vuelve a correr <code>gitnomad clone</code>.',
       'copy': 'Copiar',
       'copied': 'Copiado',
       'copy.toast': 'Comando copiado',
@@ -94,11 +94,11 @@
       faq: [
         ['¿Qué repos descarga?', 'Los repos públicos y privados de tu cuenta, incluidos los forks. Los archivados quedan fuera salvo que actives la opción. Los repos de organizaciones todavía no se incluyen.'],
         ['¿Actualiza los repos que ya tengo?', 'Por ahora clona los que faltan y no toca los existentes. La sincronización (traer cambios y avisar de commits sin subir) llega en la próxima versión.'],
-        ['¿Funciona con varias cuentas de GitHub?', 'Usa la cuenta activa en GitHub CLI. Puedes cambiarla con <code>gh auth switch</code> y apuntar a otra carpeta con <code>gitsync config set base_dir</code>.'],
-        ['¿Dónde se guarda la configuración?', '<p>Windows: <code>%APPDATA%\\gitsync\\config.json</code></p><p>macOS: <code>~/Library/Application Support/gitsync/config.json</code></p><p>Linux: <code>~/.config/gitsync/config.json</code></p>'],
-        ['¿Cómo excluyo algunos repos?', 'Con patrones separados por coma: <code>gitsync config set exclude "test-*,viejo"</code>.'],
-        ['¿Cómo actualizo gitsync?', 'Vuelve a ejecutar el comando de instalación: reemplaza el ejecutable por la última versión.'],
-        ['¿Cómo lo desinstalo?', 'Borra el ejecutable (Windows: <code>%LOCALAPPDATA%\\Programs\\gitsync</code>; macOS/Linux: <code>~/.local/bin/gitsync</code>) y la carpeta de configuración. Tus repos clonados no se tocan.']
+        ['¿Funciona con varias cuentas de GitHub?', 'Usa la cuenta activa en GitHub CLI. Puedes cambiarla con <code>gh auth switch</code> y apuntar a otra carpeta con <code>gitnomad config set base_dir</code>.'],
+        ['¿Dónde se guarda la configuración?', '<p>Windows: <code>%APPDATA%\\gitnomad\\config.json</code></p><p>macOS: <code>~/Library/Application Support/gitnomad/config.json</code></p><p>Linux: <code>~/.config/gitnomad/config.json</code></p>'],
+        ['¿Cómo excluyo algunos repos?', 'Con patrones separados por coma: <code>gitnomad config set exclude "test-*,viejo"</code>.'],
+        ['¿Cómo actualizo gitnomad?', 'Vuelve a ejecutar el comando de instalación: reemplaza el ejecutable por la última versión.'],
+        ['¿Cómo lo desinstalo?', 'Borra el ejecutable (Windows: <code>%LOCALAPPDATA%\\Programs\\gitnomad</code>; macOS/Linux: <code>~/.local/bin/gitnomad</code>) y la carpeta de configuración. Tus repos clonados no se tocan.']
       ]
     },
     en: {
@@ -108,16 +108,16 @@
       'nav.start': 'Get started',
       'nav.faq': 'FAQ',
       'hero.title': 'All your GitHub repos, on every machine.',
-      'hero.lead': 'gitsync downloads your public and private repositories into the folder you choose, with a single command. It uses your GitHub CLI session, so there are no tokens to copy, and it never overwrites your local work.',
+      'hero.lead': 'gitnomad downloads your public and private repositories into the folder you choose, with a single command. It uses your GitHub CLI session, so there are no tokens to copy, and it never overwrites your local work.',
       'hero.cta': 'Get started',
       'hero.repo': 'View code on GitHub',
       'how.title': 'Three steps, once per machine',
       'how.1.t': 'Link your account',
-      'how.1.d': 'Sign in with GitHub CLI through your browser. gitsync uses that session to see your private repos too.',
+      'how.1.d': 'Sign in with GitHub CLI through your browser. gitnomad uses that session to see your private repos too.',
       'how.2.t': 'Pick a folder',
       'how.2.d': 'Each machine keeps the repos wherever you like: <code>C:\\Dev\\github</code> on Windows, <code>~/dev/github</code> on Mac or Linux.',
       'how.3.t': 'Clone everything',
-      'how.3.d': 'gitsync compares your account with the folder and clones only what is missing. Run it again any time.',
+      'how.3.d': 'gitnomad compares your account with the folder and clones only what is missing. Run it again any time.',
       'start.title': 'Guided setup',
       'start.lead': 'Choose your system and folder. The commands are generated for you: copy them in order.',
       'wiz.os': 'Your system',
@@ -145,11 +145,11 @@
       's2.q4': 'How would you like to authenticate GitHub CLI?',
       's2.browser': 'Copy the 8-character code it shows, press Enter and paste it into the GitHub page that opens. Then authorize access.',
       's2.verify': 'Check that it is linked (it should show your username):',
-      's2.note': 'GitHub CLI stores the session on your machine. gitsync never reads or stores your token: it asks <code>gh</code> to authenticate when needed.',
-      's3.t': 'Install gitsync',
+      's2.note': 'GitHub CLI stores the session on your machine. gitnomad never reads or stores your token: it asks <code>gh</code> to authenticate when needed.',
+      's3.t': 'Install gitnomad',
       's3.win': 'In PowerShell:',
       's3.unix': 'In the terminal:',
-      's3.unix.after': 'If it then says <code>gitsync</code> is not found, open a new terminal.',
+      's3.unix.after': 'If it then says <code>gitnomad</code> is not found, open a new terminal.',
       's3.manual': 'Prefer a manual download? It is on <a href="{url}">Releases</a>.',
       's4.t': 'Set your repos folder',
       's4.d': "Save the folder in this machine's configuration:",
@@ -160,7 +160,7 @@
       's5.list': 'See your repos and which ones are missing:',
       's5.dry': 'Dry run, nothing is downloaded:',
       's5.clone': 'Clone what is missing:',
-      's5.after': 'On another machine, repeat these steps. When you create new repos, run <code>gitsync clone</code> again.',
+      's5.after': 'On another machine, repeat these steps. When you create new repos, run <code>gitnomad clone</code> again.',
       'copy': 'Copy',
       'copied': 'Copied',
       'copy.toast': 'Command copied',
@@ -180,22 +180,22 @@
       faq: [
         ['Which repos does it download?', 'The public and private repos of your account, forks included. Archived repos are skipped unless you turn the option on. Organization repos are not included yet.'],
         ['Does it update repos I already have?', 'For now it clones what is missing and leaves existing repos alone. Syncing (pulling changes and flagging unpushed commits) is coming in the next version.'],
-        ['Is the command-line output in English?', 'Not yet: gitsync currently prints its messages in Spanish. English output is planned. The commands and options are the same.'],
-        ['Does it work with several GitHub accounts?', 'It uses the active GitHub CLI account. Switch with <code>gh auth switch</code> and point to another folder with <code>gitsync config set base_dir</code>.'],
-        ['Where is the configuration stored?', '<p>Windows: <code>%APPDATA%\\gitsync\\config.json</code></p><p>macOS: <code>~/Library/Application Support/gitsync/config.json</code></p><p>Linux: <code>~/.config/gitsync/config.json</code></p>'],
-        ['How do I exclude some repos?', 'With comma-separated patterns: <code>gitsync config set exclude "test-*,old"</code>.'],
-        ['How do I update gitsync?', 'Run the install command again: it replaces the executable with the latest version.'],
-        ['How do I uninstall it?', 'Delete the executable (Windows: <code>%LOCALAPPDATA%\\Programs\\gitsync</code>; macOS/Linux: <code>~/.local/bin/gitsync</code>) and the configuration folder. Your cloned repos are not touched.']
+        ['Is the command-line output in English?', 'Not yet: gitnomad currently prints its messages in Spanish. English output is planned. The commands and options are the same.'],
+        ['Does it work with several GitHub accounts?', 'It uses the active GitHub CLI account. Switch with <code>gh auth switch</code> and point to another folder with <code>gitnomad config set base_dir</code>.'],
+        ['Where is the configuration stored?', '<p>Windows: <code>%APPDATA%\\gitnomad\\config.json</code></p><p>macOS: <code>~/Library/Application Support/gitnomad/config.json</code></p><p>Linux: <code>~/.config/gitnomad/config.json</code></p>'],
+        ['How do I exclude some repos?', 'With comma-separated patterns: <code>gitnomad config set exclude "test-*,old"</code>.'],
+        ['How do I update gitnomad?', 'Run the install command again: it replaces the executable with the latest version.'],
+        ['How do I uninstall it?', 'Delete the executable (Windows: <code>%LOCALAPPDATA%\\Programs\\gitnomad</code>; macOS/Linux: <code>~/.local/bin/gitnomad</code>) and the configuration folder. Your cloned repos are not touched.']
       ]
     }
   };
 
   // ---- Estado (se recuerda en este navegador si se puede) ----
   function load(key, fallback) {
-    try { var v = localStorage.getItem('gitsync.' + key); return v === null ? fallback : v; } catch (e) { return fallback; }
+    try { var v = localStorage.getItem('gitnomad.' + key); return v === null ? fallback : v; } catch (e) { return fallback; }
   }
   function save(key, value) {
-    try { localStorage.setItem('gitsync.' + key, value); } catch (e) { /* sin almacenamiento */ }
+    try { localStorage.setItem('gitnomad.' + key, value); } catch (e) { /* sin almacenamiento */ }
   }
 
   function detectOS() {
@@ -289,7 +289,7 @@
     s2 += p(t('s2.note'), 'note');
     html += step(t('s2.t'), s2);
 
-    // 3. Instalar gitsync
+    // 3. Instalar gitnomad
     var s3 = '';
     if (win) {
       s3 += p(t('s3.win')) + cmd('irm ' + CONFIG.site + '/install.ps1 | iex', prompt);
@@ -302,10 +302,10 @@
 
     // 4. Carpeta
     var s4 = p(t('s4.d'));
-    s4 += cmd('gitsync config set base_dir ' + q(dir || DEFAULT_DIR[state.os]), prompt);
+    s4 += cmd('gitnomad config set base_dir ' + q(dir || DEFAULT_DIR[state.os]), prompt);
     var extra = [];
-    if (!state.forks) extra.push('gitsync config set include_forks false');
-    if (state.archived) extra.push('gitsync config set include_archived true');
+    if (!state.forks) extra.push('gitnomad config set include_forks false');
+    if (state.archived) extra.push('gitnomad config set include_archived true');
     if (extra.length) {
       s4 += p(t('s4.opts'));
       extra.forEach(function (c) { s4 += cmd(c, prompt); });
@@ -314,10 +314,10 @@
     html += step(t('s4.t'), s4);
 
     // 5. Revisar y clonar
-    var s5 = p(t('s5.doctor')) + cmd('gitsync doctor --fix', prompt) +
-      p(t('s5.list')) + cmd('gitsync list', prompt) +
-      p(t('s5.dry')) + cmd('gitsync clone --dry-run', prompt) +
-      p(t('s5.clone')) + cmd('gitsync clone', prompt) +
+    var s5 = p(t('s5.doctor')) + cmd('gitnomad doctor --fix', prompt) +
+      p(t('s5.list')) + cmd('gitnomad list', prompt) +
+      p(t('s5.dry')) + cmd('gitnomad clone --dry-run', prompt) +
+      p(t('s5.clone')) + cmd('gitnomad clone', prompt) +
       p(t('s5.after'), 'note');
     html += step(t('s5.t'), s5);
 

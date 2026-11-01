@@ -28,5 +28,5 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh release create "${GITHUB_REF_NAME}" dist/* \
-            --title "gitsync ${GITHUB_REF_NAME}" \
+            --title "gitnomad ${GITHUB_REF_NAME}" \
             --generate-notes

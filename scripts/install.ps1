@@ -1,22 +1,22 @@
-# Instalador de gitsync para Windows / gitsync installer for Windows
+# Instalador de gitnomad para Windows / gitnomad installer for Windows
 #
-#   irm https://rodrigoquezadab.github.io/gitsync/install.ps1 | iex
+#   irm https://rodrigoquezadab.github.io/gitnomad/install.ps1 | iex
 #
 # Con carpeta de repos / with a repos folder:
-#   & ([scriptblock]::Create((irm https://rodrigoquezadab.github.io/gitsync/install.ps1))) -Dir 'C:\Dev\github'
+#   & ([scriptblock]::Create((irm https://rodrigoquezadab.github.io/gitnomad/install.ps1))) -Dir 'C:\Dev\github'
 #
-# Variables: GITSYNC_VERSION, GITSYNC_INSTALL_DIR, GITSYNC_DIR, GITSYNC_REPO,
-#            GITSYNC_DOWNLOAD_URL (espejo / mirror), GITSYNC_NO_MODIFY_PATH=1
+# Variables: GITNOMAD_VERSION, GITNOMAD_INSTALL_DIR, GITNOMAD_DIR, GITNOMAD_REPO,
+#            GITNOMAD_DOWNLOAD_URL (espejo / mirror), GITNOMAD_NO_MODIFY_PATH=1
 #
 # Nota: no usa 'exit' para no cerrar tu ventana de PowerShell si algo falla.
 [CmdletBinding()]
 param(
-    [string]$Dir = $env:GITSYNC_DIR,
-    [string]$Version = $(if ($env:GITSYNC_VERSION) { $env:GITSYNC_VERSION } else { 'latest' }),
-    [string]$InstallDir = $(if ($env:GITSYNC_INSTALL_DIR) { $env:GITSYNC_INSTALL_DIR } else { Join-Path $env:LOCALAPPDATA 'Programs\gitsync' })
+    [string]$Dir = $env:GITNOMAD_DIR,
+    [string]$Version = $(if ($env:GITNOMAD_VERSION) { $env:GITNOMAD_VERSION } else { 'latest' }),
+    [string]$InstallDir = $(if ($env:GITNOMAD_INSTALL_DIR) { $env:GITNOMAD_INSTALL_DIR } else { Join-Path $env:LOCALAPPDATA 'Programs\gitnomad' })
 )
 
-function Install-Gitsync {
+function Install-Gitnomad {
     param([string]$Dir, [string]$Version, [string]$InstallDir)
 
     $ErrorActionPreference = 'Stop'
@@ -25,9 +25,9 @@ function Install-Gitsync {
     function Say([string]$esText, [string]$enText) { if ($es) { Write-Host $esText } else { Write-Host $enText } }
     function Fail([string]$esText, [string]$enText) { if ($es) { throw $esText } else { throw $enText } }
 
-    $repo = if ($env:GITSYNC_REPO) { $env:GITSYNC_REPO } else { 'rodrigoquezadab/gitsync' }
+    $repo = if ($env:GITNOMAD_REPO) { $env:GITNOMAD_REPO } else { 'rodrigoquezadab/gitnomad' }
 
-    if ($env:OS -ne 'Windows_NT' -and $env:GITSYNC_ALLOW_NON_WINDOWS -ne '1') {
+    if ($env:OS -ne 'Windows_NT' -and $env:GITNOMAD_ALLOW_NON_WINDOWS -ne '1') {
         Fail 'Este instalador es para Windows. En macOS/Linux usa install.sh.' 'This installer is for Windows. On macOS/Linux use install.sh.'
     }
     if (-not $InstallDir) { Fail 'No se pudo determinar la carpeta de instalación.' 'Could not determine the install folder.' }
@@ -42,15 +42,15 @@ function Install-Gitsync {
         default { Fail "Arquitectura no soportada: $cpu" "Unsupported architecture: $cpu" }
     }
 
-    $asset = "gitsync-windows-$arch.exe"
-    if ($env:GITSYNC_DOWNLOAD_URL) { $base = $env:GITSYNC_DOWNLOAD_URL.TrimEnd('/') }
+    $asset = "gitnomad-windows-$arch.exe"
+    if ($env:GITNOMAD_DOWNLOAD_URL) { $base = $env:GITNOMAD_DOWNLOAD_URL.TrimEnd('/') }
     elseif ($Version -eq 'latest') { $base = "https://github.com/$repo/releases/latest/download" }
     else { $base = "https://github.com/$repo/releases/download/$Version" }
 
-    $tmp = Join-Path ([IO.Path]::GetTempPath()) ("gitsync-" + [Guid]::NewGuid().ToString('N'))
+    $tmp = Join-Path ([IO.Path]::GetTempPath()) ("gitnomad-" + [Guid]::NewGuid().ToString('N'))
     New-Item -ItemType Directory -Path $tmp -Force | Out-Null
     try {
-        $file = Join-Path $tmp 'gitsync.exe'
+        $file = Join-Path $tmp 'gitnomad.exe'
         Say "Descargando $asset ($Version)..." "Downloading $asset ($Version)..."
         try { Invoke-WebRequest -UseBasicParsing -Uri "$base/$asset" -OutFile $file }
         catch { Fail "No se pudo descargar $base/$asset : $($_.Exception.Message)" "Could not download $base/$asset : $($_.Exception.Message)" }
@@ -76,9 +76,9 @@ function Install-Gitsync {
         }
 
         New-Item -ItemType Directory -Path $InstallDir -Force | Out-Null
-        $bin = Join-Path $InstallDir 'gitsync.exe'
+        $bin = Join-Path $InstallDir 'gitnomad.exe'
         try { Move-Item -Path $file -Destination $bin -Force }
-        catch { Fail "No se pudo escribir $bin (¿gitsync está abierto?): $($_.Exception.Message)" "Could not write $bin (is gitsync running?): $($_.Exception.Message)" }
+        catch { Fail "No se pudo escribir $bin (¿gitnomad está abierto?): $($_.Exception.Message)" "Could not write $bin (is gitnomad running?): $($_.Exception.Message)" }
         Say "Instalado en $bin" "Installed to $bin"
     }
     finally {
@@ -89,7 +89,7 @@ function Install-Gitsync {
     $sep = [IO.Path]::PathSeparator
     $sessionParts = $env:Path -split [regex]::Escape($sep) | ForEach-Object { $_.TrimEnd('\') }
     if ($sessionParts -notcontains $InstallDir.TrimEnd('\')) { $env:Path = "$InstallDir$sep$env:Path" }
-    if ($env:OS -eq 'Windows_NT' -and $env:GITSYNC_NO_MODIFY_PATH -ne '1') {
+    if ($env:OS -eq 'Windows_NT' -and $env:GITNOMAD_NO_MODIFY_PATH -ne '1') {
         $userPath = [Environment]::GetEnvironmentVariable('Path', 'User')
         $userParts = @()
         if ($userPath) { $userParts = $userPath -split ';' | Where-Object { $_ } | ForEach-Object { $_.TrimEnd('\') } }
@@ -122,9 +122,9 @@ function Install-Gitsync {
     Say 'Siguientes pasos:' 'Next steps:'
     if ($missing) { Say '  0. Instala lo que falta (arriba) y abre una ventana nueva de PowerShell' "  0. Install what's missing (above) and open a new PowerShell window" }
     $steps = @('gh auth login')
-    if (-not $Dir) { $steps += 'gitsync config set base_dir C:\Dev\github' }
-    $steps += 'gitsync doctor --fix', 'gitsync clone'
+    if (-not $Dir) { $steps += 'gitnomad config set base_dir C:\Dev\github' }
+    $steps += 'gitnomad doctor --fix', 'gitnomad clone'
     for ($i = 0; $i -lt $steps.Count; $i++) { Write-Host ("  {0}. {1}" -f ($i + 1), $steps[$i]) }
 }
 
-Install-Gitsync -Dir $Dir -Version $Version -InstallDir $InstallDir
+Install-Gitnomad -Dir $Dir -Version $Version -InstallDir $InstallDir

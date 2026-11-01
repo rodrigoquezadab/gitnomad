@@ -1,23 +1,23 @@
 #!/bin/sh
-# Instalador de gitsync para macOS y Linux / gitsync installer for macOS and Linux
+# Instalador de gitnomad para macOS y Linux / gitnomad installer for macOS and Linux
 #
-#   curl -fsSL https://rodrigoquezadab.github.io/gitsync/install.sh | sh
-#   curl -fsSL https://rodrigoquezadab.github.io/gitsync/install.sh | sh -s -- --dir ~/dev/github
+#   curl -fsSL https://rodrigoquezadab.github.io/gitnomad/install.sh | sh
+#   curl -fsSL https://rodrigoquezadab.github.io/gitnomad/install.sh | sh -s -- --dir ~/dev/github
 #
 # Opciones / options:
 #   --dir RUTA           carpeta donde se clonarán los repos / folder to clone repos into
 #   --version vX.Y.Z     versión a instalar (por defecto la última) / version (default: latest)
 #   --install-dir RUTA   dónde dejar el ejecutable (por defecto ~/.local/bin)
 #
-# Variables: GITSYNC_VERSION, GITSYNC_INSTALL_DIR, GITSYNC_DIR, GITSYNC_REPO,
-#            GITSYNC_DOWNLOAD_URL (espejo / mirror), GITSYNC_NO_MODIFY_PATH=1
+# Variables: GITNOMAD_VERSION, GITNOMAD_INSTALL_DIR, GITNOMAD_DIR, GITNOMAD_REPO,
+#            GITNOMAD_DOWNLOAD_URL (espejo / mirror), GITNOMAD_NO_MODIFY_PATH=1
 
 set -eu
 
-REPO="${GITSYNC_REPO:-rodrigoquezadab/gitsync}"
-VERSION="${GITSYNC_VERSION:-latest}"
-INSTALL_DIR="${GITSYNC_INSTALL_DIR:-$HOME/.local/bin}"
-CLONE_DIR="${GITSYNC_DIR:-}"
+REPO="${GITNOMAD_REPO:-rodrigoquezadab/gitnomad}"
+VERSION="${GITNOMAD_VERSION:-latest}"
+INSTALL_DIR="${GITNOMAD_INSTALL_DIR:-$HOME/.local/bin}"
+CLONE_DIR="${GITNOMAD_DIR:-}"
 
 case "${LC_ALL:-${LC_MESSAGES:-${LANG:-}}}" in
   es*) ES=1 ;;
@@ -47,8 +47,8 @@ done
 case "$(uname -s)" in
   Darwin) OS=darwin ;;
   Linux) OS=linux ;;
-  MINGW*|MSYS*|CYGWIN*) fail "en Windows usa PowerShell: irm https://rodrigoquezadab.github.io/gitsync/install.ps1 | iex" \
-                             "on Windows use PowerShell: irm https://rodrigoquezadab.github.io/gitsync/install.ps1 | iex" ;;
+  MINGW*|MSYS*|CYGWIN*) fail "en Windows usa PowerShell: irm https://rodrigoquezadab.github.io/gitnomad/install.ps1 | iex" \
+                             "on Windows use PowerShell: irm https://rodrigoquezadab.github.io/gitnomad/install.ps1 | iex" ;;
   *) fail "sistema no soportado: $(uname -s)" "unsupported OS: $(uname -s)" ;;
 esac
 
@@ -62,9 +62,9 @@ if [ "$OS" = darwin ] && [ "$ARCH" = amd64 ] && [ "$(sysctl -n hw.optional.arm64
   ARCH=arm64
 fi
 
-ASSET="gitsync-$OS-$ARCH"
-if [ -n "${GITSYNC_DOWNLOAD_URL:-}" ]; then
-  BASE="${GITSYNC_DOWNLOAD_URL%/}"
+ASSET="gitnomad-$OS-$ARCH"
+if [ -n "${GITNOMAD_DOWNLOAD_URL:-}" ]; then
+  BASE="${GITNOMAD_DOWNLOAD_URL%/}"
 elif [ "$VERSION" = latest ]; then
   BASE="https://github.com/$REPO/releases/latest/download"
 else
@@ -80,20 +80,20 @@ else
   fail "se necesita curl o wget" "curl or wget is required"
 fi
 
-TMP="$(mktemp -d 2>/dev/null || mktemp -d -t gitsync)"
+TMP="$(mktemp -d 2>/dev/null || mktemp -d -t gitnomad)"
 trap 'rm -rf "$TMP"' EXIT INT TERM
 
 say "Descargando $ASSET ($VERSION)..." "Downloading $ASSET ($VERSION)..."
-download "$BASE/$ASSET" "$TMP/gitsync" ||
+download "$BASE/$ASSET" "$TMP/gitnomad" ||
   fail "no se pudo descargar $BASE/$ASSET" "could not download $BASE/$ASSET"
 
 # --- Verificar SHA-256 / verify checksum ---
 if download "$BASE/checksums.txt" "$TMP/checksums.txt" 2>/dev/null; then
   EXPECTED="$(awk -v f="$ASSET" '$2 == f || $2 == "*" f { print $1 }' "$TMP/checksums.txt")"
   if command -v sha256sum >/dev/null 2>&1; then
-    ACTUAL="$(sha256sum "$TMP/gitsync" | awk '{print $1}')"
+    ACTUAL="$(sha256sum "$TMP/gitnomad" | awk '{print $1}')"
   elif command -v shasum >/dev/null 2>&1; then
-    ACTUAL="$(shasum -a 256 "$TMP/gitsync" | awk '{print $1}')"
+    ACTUAL="$(shasum -a 256 "$TMP/gitnomad" | awk '{print $1}')"
   else
     ACTUAL=""
   fi
@@ -113,9 +113,9 @@ fi
 
 # --- Instalar / install ---
 mkdir -p "$INSTALL_DIR"
-chmod +x "$TMP/gitsync"
-mv -f "$TMP/gitsync" "$INSTALL_DIR/gitsync"
-BIN="$INSTALL_DIR/gitsync"
+chmod +x "$TMP/gitnomad"
+mv -f "$TMP/gitnomad" "$INSTALL_DIR/gitnomad"
+BIN="$INSTALL_DIR/gitnomad"
 say "Instalado en $BIN" "Installed to $BIN"
 "$BIN" version || true
 
@@ -132,14 +132,14 @@ if [ "$ON_PATH" = 0 ]; then
     fish) RC="$HOME/.config/fish/config.fish"; LINE="fish_add_path \"$INSTALL_DIR\"" ;;
     *) RC="$HOME/.profile"; LINE="export PATH=\"$INSTALL_DIR:\$PATH\"" ;;
   esac
-  if [ "${GITSYNC_NO_MODIFY_PATH:-0}" != 1 ]; then
+  if [ "${GITNOMAD_NO_MODIFY_PATH:-0}" != 1 ]; then
     if ! grep -qsF "$LINE" "$RC"; then
       mkdir -p "$(dirname "$RC")"
-      printf '\n# gitsync\n%s\n' "$LINE" >> "$RC"
+      printf '\n# gitnomad\n%s\n' "$LINE" >> "$RC"
       say "Agregué $INSTALL_DIR al PATH en $RC" "Added $INSTALL_DIR to PATH in $RC"
     fi
-    say "Abre una terminal nueva (o corre: $LINE) para usar 'gitsync'." \
-        "Open a new terminal (or run: $LINE) to use 'gitsync'."
+    say "Abre una terminal nueva (o corre: $LINE) para usar 'gitnomad'." \
+        "Open a new terminal (or run: $LINE) to use 'gitnomad'."
   else
     say "Agrega esto a tu $RC: $LINE" "Add this to your $RC: $LINE"
   fi
@@ -177,6 +177,6 @@ say "Siguientes pasos:" "Next steps:"
 N=1
 step() { echo "  $N. $1"; N=$((N + 1)); }
 step "gh auth login"
-if [ -z "$CLONE_DIR" ]; then step "gitsync config set base_dir ~/dev/github"; fi
-step "gitsync doctor --fix"
-step "gitsync clone"
+if [ -z "$CLONE_DIR" ]; then step "gitnomad config set base_dir ~/dev/github"; fi
+step "gitnomad doctor --fix"
+step "gitnomad clone"

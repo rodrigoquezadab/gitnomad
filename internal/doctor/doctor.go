@@ -11,9 +11,9 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/rodrigoquezadab/gitsync/internal/config"
-	"github.com/rodrigoquezadab/gitsync/internal/github"
-	"github.com/rodrigoquezadab/gitsync/internal/gitops"
+	"github.com/rodrigoquezadab/gitnomad/internal/config"
+	"github.com/rodrigoquezadab/gitnomad/internal/github"
+	"github.com/rodrigoquezadab/gitnomad/internal/gitops"
 )
 
 // Level es la gravedad de un chequeo.
@@ -82,7 +82,7 @@ func Run(ctx context.Context, cfg config.Config, fix bool) []Check {
 }
 
 // credentialCheck: para que `git push/pull` en los repos clonados use la
-// sesión de gh también fuera de gitsync.
+// sesión de gh también fuera de gitnomad.
 func credentialCheck(ctx context.Context, fix bool) Check {
 	c := Check{Name: "git usa las credenciales de gh"}
 	out, _ := gitops.Run(ctx, "", "git", "config", "--global", "--get-all", "credential.https://github.com.helper")
@@ -100,9 +100,9 @@ func credentialCheck(ctx context.Context, fix bool) Check {
 	}
 	c.Level = Warn
 	if c.Detail == "" {
-		c.Detail = "no configurado (gitsync igual puede clonar, pero `git push` manual podría pedir clave)"
+		c.Detail = "no configurado (gitnomad igual puede clonar, pero `git push` manual podría pedir clave)"
 	}
-	c.Hint = "corre: gitsync doctor --fix   (o: gh auth setup-git)"
+	c.Hint = "corre: gitnomad doctor --fix   (o: gh auth setup-git)"
 	return c
 }
 
@@ -119,8 +119,8 @@ func longPathsCheck(ctx context.Context, fix bool) Check {
 			return c
 		}
 	}
-	c.Level, c.Detail = Warn, "desactivado (los repos clonados por gitsync lo activan igual)"
-	c.Hint = "corre: gitsync doctor --fix"
+	c.Level, c.Detail = Warn, "desactivado (los repos clonados por gitnomad lo activan igual)"
+	c.Hint = "corre: gitnomad doctor --fix"
 	return c
 }
 
@@ -142,10 +142,10 @@ func baseDirCheck(dir string, fix bool) Check {
 		return c
 	case !info.IsDir():
 		c.Level, c.Detail = Fail, dir+" existe pero no es una carpeta"
-		c.Hint = "cambia la carpeta con: gitsync config set base_dir <ruta>"
+		c.Hint = "cambia la carpeta con: gitnomad config set base_dir <ruta>"
 		return c
 	}
-	probe := filepath.Join(dir, ".gitsync-write-test")
+	probe := filepath.Join(dir, ".gitnomad-write-test")
 	if err := os.WriteFile(probe, []byte("ok"), 0o644); err != nil {
 		c.Level, c.Detail = Fail, "sin permiso de escritura en "+dir
 		return c

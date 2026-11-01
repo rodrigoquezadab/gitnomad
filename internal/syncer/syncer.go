@@ -11,9 +11,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/rodrigoquezadab/gitsync/internal/config"
-	"github.com/rodrigoquezadab/gitsync/internal/github"
-	"github.com/rodrigoquezadab/gitsync/internal/gitops"
+	"github.com/rodrigoquezadab/gitnomad/internal/config"
+	"github.com/rodrigoquezadab/gitnomad/internal/github"
+	"github.com/rodrigoquezadab/gitnomad/internal/gitops"
 )
 
 // State es el estado local de un repo antes de actuar.

@@ -1,4 +1,4 @@
-# gitsync
+# gitnomad
 
 Descarga todos tus repos de GitHub (públicos y privados) en cualquier equipo
 con Windows, macOS o Linux, para trabajarlos en local.
@@ -6,18 +6,18 @@ con Windows, macOS o Linux, para trabajarlos en local.
 > Estado: **fase 1** (motor + CLI: listar y clonar lo que falta).
 > Próximas fases: sincronización completa, interfaz gráfica (Wails) y releases.
 
-Web con guía de instalación: **https://rodrigoquezadab.github.io/gitsync**
+Web con guía de instalación: **https://rodrigoquezadab.github.io/gitnomad**
 
 ## Instalar
 
 ```powershell
 # Windows (PowerShell)
-irm https://rodrigoquezadab.github.io/gitsync/install.ps1 | iex
+irm https://rodrigoquezadab.github.io/gitnomad/install.ps1 | iex
 ```
 
 ```sh
 # macOS / Linux
-curl -fsSL https://rodrigoquezadab.github.io/gitsync/install.sh | sh
+curl -fsSL https://rodrigoquezadab.github.io/gitnomad/install.sh | sh
 ```
 
 Los instaladores detectan sistema y arquitectura, descargan el ejecutable de la
@@ -38,18 +38,18 @@ gh auth login          # GitHub.com → HTTPS → navegador
 ## Uso
 
 ```sh
-gitsync doctor --fix                      # revisa todo y arregla lo que pueda
-gitsync config init --dir ~/dev/github    # carpeta de repos en este equipo
-gitsync list                              # qué repos hay y cuáles faltan
-gitsync clone --dry-run                   # ver qué se clonaría
-gitsync clone                             # clonar lo que falta
+gitnomad doctor --fix                      # revisa todo y arregla lo que pueda
+gitnomad config init --dir ~/dev/github    # carpeta de repos en este equipo
+gitnomad list                              # qué repos hay y cuáles faltan
+gitnomad clone --dry-run                   # ver qué se clonaría
+gitnomad clone                             # clonar lo que falta
 ```
 
 En Windows la carpeta puede ser, por ejemplo, `--dir C:\Dev\github`.
 
 ### Configuración
 
-`gitsync config set <clave> <valor>`:
+`gitnomad config set <clave> <valor>`:
 
 | clave | por defecto | qué hace |
 |---|---|---|
@@ -60,7 +60,7 @@ En Windows la carpeta puede ser, por ejemplo, `--dir C:\Dev\github`.
 | `exclude` | (vacío) | patrones separados por coma, ej. `test-*,viejo` |
 
 El archivo se guarda en la carpeta de configuración del sistema
-(`%APPDATA%\gitsync`, `~/Library/Application Support/gitsync`, `~/.config/gitsync`).
+(`%APPDATA%\gitnomad`, `~/Library/Application Support/gitnomad`, `~/.config/gitnomad`).
 
 ## Seguridad
 
@@ -75,10 +75,10 @@ Requiere Go 1.22+.
 
 ```sh
 go test ./...
-go build -o dist/ ./cmd/gitsync
+go build -o dist/ ./cmd/gitnomad
 # cruzado:
-GOOS=windows GOARCH=amd64 go build -o dist/gitsync.exe ./cmd/gitsync
-GOOS=darwin  GOARCH=arm64 go build -o dist/gitsync-macos ./cmd/gitsync
+GOOS=windows GOARCH=amd64 go build -o dist/gitnomad.exe ./cmd/gitnomad
+GOOS=darwin  GOARCH=arm64 go build -o dist/gitnomad-macos ./cmd/gitnomad
 ```
 
 ## Publicar
@@ -90,13 +90,13 @@ GOOS=darwin  GOARCH=arm64 go build -o dist/gitsync-macos ./cmd/gitsync
    `release.yml` corre los tests, compila los 6 ejecutables con `scripts/build.sh`
    y crea la release con `checksums.txt`. Los instaladores siempre bajan la última.
 
-Si haces un fork, cambia `rodrigoquezadab/gitsync` en `web/app.js` (`CONFIG`) y en
-los dos instaladores (o usa la variable `GITSYNC_REPO`).
+Si haces un fork, cambia `rodrigoquezadab/gitnomad` en `web/app.js` (`CONFIG`) y en
+los dos instaladores (o usa la variable `GITNOMAD_REPO`).
 
 ## Estructura
 
 ```
-cmd/gitsync/       CLI
+cmd/gitnomad/       CLI
 internal/config/   configuración por equipo
 internal/github/   lista de repos vía gh
 internal/gitops/   ejecutar git, clonar, comparar URLs

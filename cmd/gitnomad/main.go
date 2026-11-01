@@ -1,4 +1,4 @@
-// gitsync descarga y mantiene al día todos tus repos de GitHub en cualquier
+// gitnomad descarga y mantiene al día todos tus repos de GitHub en cualquier
 // equipo (Windows, macOS o Linux).
 package main
 
@@ -17,28 +17,28 @@ import (
 	"text/tabwriter"
 	"time"
 
-	"github.com/rodrigoquezadab/gitsync/internal/config"
-	"github.com/rodrigoquezadab/gitsync/internal/doctor"
-	"github.com/rodrigoquezadab/gitsync/internal/github"
-	"github.com/rodrigoquezadab/gitsync/internal/gitops"
-	"github.com/rodrigoquezadab/gitsync/internal/syncer"
+	"github.com/rodrigoquezadab/gitnomad/internal/config"
+	"github.com/rodrigoquezadab/gitnomad/internal/doctor"
+	"github.com/rodrigoquezadab/gitnomad/internal/github"
+	"github.com/rodrigoquezadab/gitnomad/internal/gitops"
+	"github.com/rodrigoquezadab/gitnomad/internal/syncer"
 )
 
 // version se reemplaza al compilar: -ldflags "-X main.version=v0.1.0"
 var version = "dev"
 
-const usage = `gitsync - descarga todos tus repos de GitHub en este equipo
+const usage = `gitnomad - descarga todos tus repos de GitHub en este equipo
 
 Uso:
-  gitsync <comando> [opciones]
+  gitnomad <comando> [opciones]
 
 Comandos:
   doctor          Revisa que git, gh y la sesión de GitHub estén listos
                   (--fix arregla lo que se pueda)
   config          Muestra o cambia la configuración de este equipo
-                    gitsync config show
-                    gitsync config init [--dir RUTA]
-                    gitsync config set <clave> <valor>
+                    gitnomad config show
+                    gitnomad config init [--dir RUTA]
+                    gitnomad config set <clave> <valor>
   list            Lista tus repos y si ya están en este equipo (--json)
   clone           Clona los repos que faltan en este equipo
                     --dry-run      muestra qué haría sin clonar
@@ -48,9 +48,9 @@ Comandos:
 
 Primeros pasos en un equipo nuevo:
   gh auth login
-  gitsync doctor --fix
-  gitsync config init --dir ~/dev/github
-  gitsync clone
+  gitnomad doctor --fix
+  gitnomad config init --dir ~/dev/github
+  gitnomad clone
 `
 
 func main() {
@@ -76,7 +76,7 @@ func run(ctx context.Context, args []string, out, errOut io.Writer) int {
 	case "clone":
 		err = cmdClone(ctx, rest, out, github.GH{})
 	case "version", "--version", "-v":
-		fmt.Fprintf(out, "gitsync %s (%s/%s)\n", version, runtime.GOOS, runtime.GOARCH)
+		fmt.Fprintf(out, "gitnomad %s (%s/%s)\n", version, runtime.GOOS, runtime.GOARCH)
 	case "help", "--help", "-h":
 		fmt.Fprint(out, usage)
 	default:
@@ -124,7 +124,7 @@ func loadConfig(out io.Writer) (config.Config, error) {
 	}
 	if !exists {
 		fmt.Fprintf(out, "(sin configuración en este equipo; usando la carpeta %s. "+
-			"Cámbiala con `gitsync config init --dir RUTA`)\n\n", cfg.BaseDir)
+			"Cámbiala con `gitnomad config init --dir RUTA`)\n\n", cfg.BaseDir)
 	}
 	return cfg, nil
 }
@@ -157,7 +157,7 @@ func cmdDoctor(ctx context.Context, args []string, out io.Writer) error {
 		}
 	}
 	if failed {
-		fmt.Fprintln(out, "\nHay problemas que resolver antes de usar gitsync.")
+		fmt.Fprintln(out, "\nHay problemas que resolver antes de usar gitnomad.")
 		return errReported
 	}
 	fmt.Fprintln(out, "\nTodo listo.")
@@ -195,7 +195,7 @@ func cmdConfig(args []string, out io.Writer) error {
 		}
 		_, exists, _ := config.Load()
 		if exists && !*force {
-			return usageError{"ya existe una configuración; usa `gitsync config set` o agrega --force"}
+			return usageError{"ya existe una configuración; usa `gitnomad config set` o agrega --force"}
 		}
 		cfg := config.Default()
 		if *dir != "" {
@@ -212,7 +212,7 @@ func cmdConfig(args []string, out io.Writer) error {
 
 	case "set":
 		if len(args) != 2 {
-			return usageError{"uso: gitsync config set <clave> <valor>\n" +
+			return usageError{"uso: gitnomad config set <clave> <valor>\n" +
 				"claves: base_dir, parallel, include_archived, include_forks, exclude (separado por comas)"}
 		}
 		cfg, _, err := config.Load()

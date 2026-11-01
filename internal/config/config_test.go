@@ -8,7 +8,7 @@ import (
 
 func TestSaveLoadRoundTrip(t *testing.T) {
 	dir := t.TempDir()
-	t.Setenv("GITSYNC_CONFIG", filepath.Join(dir, "sub", "config.json"))
+	t.Setenv("GITNOMAD_CONFIG", filepath.Join(dir, "sub", "config.json"))
 
 	if _, exists, err := Load(); err != nil || exists {
 		t.Fatalf("Load sin archivo: exists=%v err=%v", exists, err)

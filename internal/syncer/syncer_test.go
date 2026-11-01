@@ -8,9 +8,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/rodrigoquezadab/gitsync/internal/config"
-	"github.com/rodrigoquezadab/gitsync/internal/github"
-	"github.com/rodrigoquezadab/gitsync/internal/gitops"
+	"github.com/rodrigoquezadab/gitnomad/internal/config"
+	"github.com/rodrigoquezadab/gitnomad/internal/github"
+	"github.com/rodrigoquezadab/gitnomad/internal/gitops"
 )
 
 func git(t *testing.T, dir string, args ...string) {
