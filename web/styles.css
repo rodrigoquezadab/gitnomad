@@ -173,6 +173,8 @@ select, input[type="text"] {
 input[type="text"] { font-family: var(--mono); font-size: .95rem; width: 100%; }
 select:focus, input[type="text"]:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
 .dir-row { display: flex; gap: 8px; }
+.dir-row .btn { white-space: nowrap; }
+input[type="text"]:disabled { opacity: .5; cursor: not-allowed; }
 @media (max-width: 480px) { .dir-row { flex-direction: column; } }
 .hint { color: var(--muted); font-size: .9rem; margin: 8px 0 0; }
 .warn { background: var(--warn-bg); color: var(--warn-text); font-size: .9rem; padding: 8px 12px; border-radius: 8px; margin: 8px 0 0; }

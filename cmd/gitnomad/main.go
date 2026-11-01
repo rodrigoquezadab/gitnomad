@@ -21,6 +21,7 @@ import (
 	"github.com/rodrigoquezadab/gitnomad/internal/doctor"
 	"github.com/rodrigoquezadab/gitnomad/internal/github"
 	"github.com/rodrigoquezadab/gitnomad/internal/gitops"
+	"github.com/rodrigoquezadab/gitnomad/internal/picker"
 	"github.com/rodrigoquezadab/gitnomad/internal/syncer"
 )
 
@@ -37,8 +38,9 @@ Comandos:
                   (--fix arregla lo que se pueda)
   config          Muestra o cambia la configuración de este equipo
                     gitnomad config show
-                    gitnomad config init [--dir RUTA]
+                    gitnomad config init [--dir RUTA] [--pick]
                     gitnomad config set <clave> <valor>
+                    gitnomad config set base_dir --pick   (elige en una ventana)
   list            Lista tus repos y si ya están en este equipo (--json)
   clone           Clona los repos que faltan en este equipo
                     --dry-run      muestra qué haría sin clonar
@@ -70,7 +72,7 @@ func run(ctx context.Context, args []string, out, errOut io.Writer) int {
 	case "doctor":
 		err = cmdDoctor(ctx, rest, out)
 	case "config":
-		err = cmdConfig(rest, out)
+		err = cmdConfig(ctx, rest, out)
 	case "list", "ls":
 		err = cmdList(ctx, rest, out, github.GH{})
 	case "clone":
@@ -166,7 +168,7 @@ func cmdDoctor(ctx context.Context, args []string, out io.Writer) error {
 
 // ---------- config ----------
 
-func cmdConfig(args []string, out io.Writer) error {
+func cmdConfig(ctx context.Context, args []string, out io.Writer) error {
 	sub := "show"
 	if len(args) > 0 {
 		sub, args = args[0], args[1:]
@@ -189,6 +191,7 @@ func cmdConfig(args []string, out io.Writer) error {
 	case "init":
 		fs := newFlags("config init")
 		dir := fs.String("dir", "", "")
+		pick := fs.Bool("pick", false, "")
 		force := fs.Bool("force", false, "")
 		if err := parseFlags(fs, args); err != nil {
 			return err
@@ -198,6 +201,17 @@ func cmdConfig(args []string, out io.Writer) error {
 			return usageError{"ya existe una configuración; usa `gitnomad config set` o agrega --force"}
 		}
 		cfg := config.Default()
+		if *pick {
+			start := cfg.BaseDir
+			if *dir != "" {
+				start = config.ExpandHome(*dir)
+			}
+			p, err := pickDir(ctx, start, out)
+			if err != nil {
+				return err
+			}
+			*dir = p
+		}
 		if *dir != "" {
 			cfg.BaseDir = *dir
 		}
@@ -213,13 +227,19 @@ func cmdConfig(args []string, out io.Writer) error {
 	case "set":
 		if len(args) != 2 {
 			return usageError{"uso: gitnomad config set <clave> <valor>\n" +
-				"claves: base_dir, parallel, include_archived, include_forks, exclude (separado por comas)"}
+				"claves: base_dir, parallel, include_archived, include_forks, exclude (separado por comas)\n" +
+				"para elegir la carpeta en una ventana: gitnomad config set base_dir --pick"}
 		}
 		cfg, _, err := config.Load()
 		if err != nil {
 			return err
 		}
 		key, val := args[0], args[1]
+		if key == "base_dir" && val == "--pick" {
+			if val, err = pickDir(ctx, cfg.BaseDir, out); err != nil {
+				return err
+			}
+		}
 		switch key {
 		case "base_dir":
 			cfg.BaseDir = val
@@ -253,6 +273,19 @@ func cmdConfig(args []string, out io.Writer) error {
 		return nil
 	}
 	return usageError{"subcomando de config desconocido: " + sub}
+}
+
+// pickDir abre el selector de carpetas del sistema, empezando en start.
+func pickDir(ctx context.Context, start string, out io.Writer) (string, error) {
+	fmt.Fprintln(out, "Elige la carpeta en la ventana que se abrió...")
+	p, err := picker.Folder(ctx, "Carpeta donde gitnomad clonará tus repos", start)
+	if errors.Is(err, picker.ErrCanceled) {
+		return "", usageError{"no se eligió ninguna carpeta; no se cambió nada"}
+	}
+	if errors.Is(err, picker.ErrUnavailable) {
+		return "", usageError{err.Error() + "; escribe la ruta: gitnomad config set base_dir RUTA"}
+	}
+	return p, err
 }
 
 func printConfig(out io.Writer, c config.Config) {

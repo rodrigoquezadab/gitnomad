@@ -47,6 +47,10 @@ gitnomad clone                             # clonar lo que falta
 
 En Windows la carpeta puede ser, por ejemplo, `--dir C:\Dev\github`.
 
+Para elegir la carpeta en el selector de carpetas del sistema en vez de
+escribirla, usa `--pick`: `gitnomad config init --pick` o
+`gitnomad config set base_dir --pick`. En Linux necesita `zenity` o `kdialog`.
+
 ### Configuración
 
 `gitnomad config set <clave> <valor>`:

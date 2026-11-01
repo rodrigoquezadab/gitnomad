@@ -38,7 +38,9 @@
       'wiz.distro': 'Distribución',
       'wiz.dir': 'Carpeta donde se clonarán los repos',
       'wiz.dir.hint': 'Puedes usar <code>~</code> para tu carpeta personal. Se crea si no existe.',
-      'wiz.reset': 'Usar la sugerida',
+      'wiz.pick': 'Elegir en una ventana',
+      'wiz.type': 'Escribir la ruta',
+      'wiz.pick.hint': 'Al llegar al paso 4, gitnomad abrirá el selector de carpetas de tu sistema para que elijas dónde guardar los repos.',
       'wiz.options': 'Opciones',
       'wiz.forks': 'Incluir forks',
       'wiz.archived': 'Incluir repos archivados',
@@ -67,6 +69,7 @@
       's3.manual': '¿Prefieres descargarlo a mano? Está en <a href="{url}">Releases</a>.',
       's4.t': 'Define la carpeta de tus repos',
       's4.d': 'Guarda la carpeta en la configuración de este equipo:',
+      's4.pick': 'Este comando abre una ventana para elegir la carpeta y la guarda en la configuración de este equipo:',
       's4.opts': 'Opciones que elegiste:',
       's4.note': 'Cada equipo tiene su propia configuración, así que en otro dispositivo puedes usar otra ruta.',
       's5.t': 'Revisa y clona',
@@ -124,7 +127,9 @@
       'wiz.distro': 'Distribution',
       'wiz.dir': 'Folder to clone your repos into',
       'wiz.dir.hint': 'You can use <code>~</code> for your home folder. It is created if it does not exist.',
-      'wiz.reset': 'Use suggested',
+      'wiz.pick': 'Choose in a window',
+      'wiz.type': 'Type the path',
+      'wiz.pick.hint': "At step 4, gitnomad opens your system's folder picker so you can choose where to keep your repos.",
       'wiz.options': 'Options',
       'wiz.forks': 'Include forks',
       'wiz.archived': 'Include archived repos',
@@ -153,6 +158,7 @@
       's3.manual': 'Prefer a manual download? It is on <a href="{url}">Releases</a>.',
       's4.t': 'Set your repos folder',
       's4.d': "Save the folder in this machine's configuration:",
+      's4.pick': "This command opens a window to choose the folder and saves it in this machine's configuration:",
       's4.opts': 'The options you picked:',
       's4.note': 'Each machine has its own configuration, so another device can use a different path.',
       's5.t': 'Check and clone',
@@ -215,6 +221,7 @@
     os: load('os', detectOS()),
     distro: load('distro', 'apt'),
     dir: load('dir', ''),
+    pick: load('pick', '0') === '1',
     forks: load('forks', '1') === '1',
     archived: load('archived', '0') === '1'
   };
@@ -301,8 +308,9 @@
     html += step(t('s3.t'), s3);
 
     // 4. Carpeta
-    var s4 = p(t('s4.d'));
-    s4 += cmd('gitnomad config set base_dir ' + q(dir || DEFAULT_DIR[state.os]), prompt);
+    var s4 = state.pick
+      ? p(t('s4.pick')) + cmd('gitnomad config set base_dir --pick', prompt)
+      : p(t('s4.d')) + cmd('gitnomad config set base_dir ' + q(dir || DEFAULT_DIR[state.os]), prompt);
     var extra = [];
     if (!state.forks) extra.push('gitnomad config set include_forks false');
     if (state.archived) extra.push('gitnomad config set include_archived true');
@@ -328,7 +336,8 @@
     var dir = state.dir.trim();
     var warn = document.getElementById('dir-warn');
     var msg = '';
-    if (!dir) msg = t('wiz.warn.empty');
+    if (state.pick) msg = '';
+    else if (!dir) msg = t('wiz.warn.empty');
     else if (!isAbsolute(dir, state.os)) msg = t('wiz.warn.relative', { ex: '<code>' + esc(DEFAULT_DIR[state.os]) + '</code>' });
     warn.innerHTML = msg;
     warn.hidden = !msg;
@@ -361,6 +370,14 @@
     document.getElementById('distro-field').hidden = state.os !== 'linux';
     document.getElementById('distro').value = state.distro;
     document.getElementById('dir').value = state.dir;
+    document.getElementById('dir').disabled = state.pick;
+    var pickBtn = document.getElementById('dir-pick');
+    pickBtn.setAttribute('data-i18n', state.pick ? 'wiz.type' : 'wiz.pick');
+    pickBtn.setAttribute('aria-pressed', String(state.pick));
+    pickBtn.innerHTML = t(pickBtn.getAttribute('data-i18n'));
+    var hint = document.getElementById('dir-hint');
+    hint.setAttribute('data-i18n', state.pick ? 'wiz.pick.hint' : 'wiz.dir.hint');
+    hint.innerHTML = t(hint.getAttribute('data-i18n'));
     document.getElementById('dir').placeholder = DEFAULT_DIR[state.os];
     document.getElementById('forks').checked = state.forks;
     document.getElementById('archived').checked = state.archived;
@@ -427,8 +444,8 @@
   document.getElementById('dir').addEventListener('input', function (e) {
     state.dir = e.target.value; save('dir', state.dir); renderSteps(); validateDir();
   });
-  document.getElementById('dir-reset').addEventListener('click', function () {
-    state.dir = DEFAULT_DIR[state.os]; save('dir', state.dir); syncForm(); renderSteps(); validateDir();
+  document.getElementById('dir-pick').addEventListener('click', function () {
+    state.pick = !state.pick; save('pick', state.pick ? '1' : '0'); syncForm(); renderSteps(); validateDir();
   });
   document.getElementById('forks').addEventListener('change', function (e) {
     state.forks = e.target.checked; save('forks', state.forks ? '1' : '0'); renderSteps();
